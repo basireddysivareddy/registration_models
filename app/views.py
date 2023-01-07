@@ -4,6 +4,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth import login,authenticate,logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from app.models import *
 # Create your views here.
 from django.core.mail import send_mail
 def home(request):
@@ -56,3 +57,10 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('home'))
+@login_required
+def profile_info(request):
+    username=request.session.get('username')
+    USD=User.objects.get(username=username)
+    PFD=profile.objects.get(user=USD)
+    d={'USD':USD,'PFD':PFD}
+    return render(request,'profile_info.html',d)    
